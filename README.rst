@@ -61,11 +61,11 @@ The details for the underlying mathematics can be found in
 McInnes, L, Healy, J, *UMAP: Uniform Manifold Approximation and Projection
 for Dimension Reduction*, ArXiv e-prints 1802.03426, 2018
 
-A broader introduction to UMAP targetted the scientific community can be found 
+A broader introduction to UMAP targetted the scientific community can be found
 in our `paper published in Nature Review Methods Primers  <https://doi.org/10.1038/s43586-024-00363-x>`_:
 
-Healy, J., McInnes, L. *Uniform manifold approximation and projection*. Nat Rev Methods 
-Primers 4, 82 (2024). 
+Healy, J., McInnes, L. *Uniform manifold approximation and projection*. Nat Rev Methods
+Primers 4, 82 (2024).
 
 A read only version of this paper can accessed via `link <https://rdcu.be/d0YZT>`_
 
@@ -193,6 +193,24 @@ Or if you prefer to use pip:
     python -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
     pip install -e .
+
+**Development Testing with testmon**
+
+This project uses ``pytest-testmon`` to optimize test execution by only running tests affected by code changes. For best results (especially in CI/CD environments), ensure testmon uses a file-based database:
+
+.. code:: bash
+
+    # Run tests with file-based testmon cache
+    pytest --testmon-db=.testmon.db umap/tests/
+
+Configure in ``pyproject.toml`` or pytest config:
+
+.. code:: ini
+
+    [tool:pytest]
+    testmon_db = .testmon.db
+
+The file-based database (``.testmon.db``) should be persistent across test runs to provide reliable optimization benefits.
 
 ---------------
 How to use UMAP
@@ -444,7 +462,7 @@ Using Nomic Atlas with UMAP is straightforward:
 
     # Create a dataset
     dataset = AtlasDataset("my-dataset")
-    
+
     # data is a DataFrame or a list of dicts
     dataset.add_data(data)
 
@@ -475,7 +493,7 @@ Nomic Atlas provides:
 GPU-Accelerated UMAP with torchdr
 ---------------------------------
 
-For GPU-accelerated UMAP computations, `torchdr <https://github.com/TorchDR/TorchDR>`_ provides a PyTorch-based implementation that significantly speed up the algorithm. 
+For GPU-accelerated UMAP computations, `torchdr <https://github.com/TorchDR/TorchDR>`_ provides a PyTorch-based implementation that significantly speed up the algorithm.
 torchdr accelerates **every step** of the dimensionality reduction pipeline on GPU: kNN computation, affinity construction and embedding optimization.
 
 Using torchdr with UMAP is straightforward:
@@ -483,7 +501,7 @@ Using torchdr with UMAP is straightforward:
 .. code:: python
 
     from torchdr import UMAP as torchdrUMAP
-    
+
     umap_gpu = torchdrUMAP(
         n_neighbors=15,
         min_dist=0.1,
@@ -621,5 +639,3 @@ you can't contribute. To contribute please
 make your changes and
 submit a pull request. We will do our best to work through any issues with
 you and get your code merged into the main branch.
-
-

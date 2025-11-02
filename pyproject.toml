@@ -103,3 +103,7 @@ line-ending = "lf"
 [tool.ty]
 python_version = "3.9"
 strict = true
+
+[tool.pytest.ini_options]
+testmon_db = ".testmon.db"
+addopts = "-v"
