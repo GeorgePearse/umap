@@ -117,6 +117,12 @@ Major Initiatives
   - More efficient edge management and freshening process
   - Written in Rust, but algorithm principles apply to Python implementation
 
+- **ANN-Benchmarks**: Comprehensive benchmark suite for nearest neighbor algorithms
+  - See benchmarks: https://ann-benchmarks.com/index.html
+  - Real-world datasets and performance comparisons
+  - Tracks speed vs recall tradeoffs across all major algorithms
+  - Essential resource for validating implementation choices
+
 **Scope**:
 - Replace pynndescent's NNDescent with alternatives (see comparison below)
 - Implement missing distance metrics that pynndescent provides
@@ -192,7 +198,10 @@ Dependencies     NumPy only           Minimal              Minimal              
 - **Distance metrics**: Not all custom metrics may be supported by all backends
 - **API compatibility**: Ensure the abstraction layer provides a clean interface
 - **Native implementation option**: HGG is Rust-based; could be wrapped via PyO3 for Python bindings if performance is critical
-- **Benchmarking**: Use ann-benchmarks.com for comprehensive performance testing
+- **Benchmarking**:
+  - Use https://ann-benchmarks.com/index.html for comprehensive performance validation
+  - Compare UMAP with/without pynndescent against benchmark results
+  - Validate speed vs recall tradeoffs on multiple datasets
 - **Research reproducibility**: HGG's deterministic behavior may be valuable for scientific use cases
 
 ---
