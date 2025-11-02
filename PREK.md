@@ -72,27 +72,31 @@ prek run mypy
 - Test files: Additional docstring rules + `S101` (assert usage)
 - setup.py: Missing module docstring
 
-### 2. ty (Type Checker) - Manual Execution
-- **Rust-based type checker** by Astral - significantly faster than Python-based alternatives
+### 2. ty (Type Checker) - Via Pre-commit Local Hook
+- **Rust-based type checker** by Astral - significantly faster than Python-based alternatives (0.5s vs mypy's 18s+)
 - **Strict mode enabled** - enforces type annotations
 - **Configuration**: See `pyproject.toml` under `[tool.ty]`
 - **Automatic detection** - Automatically detects virtual environments and reads config
+- **Integrated via local hook** - Runs automatically on commit as part of prek
 
 **Running ty:**
 ```bash
-# Install ty
-uv tool install ty
+# Automatically (on commit or via prek)
+prek run ty
 
-# Run type checking manually
+# Manually
 ty check
 ty check path/to/file.py
 ```
 
-**Note**: ty is pre-alpha (v0.0.1-alpha.25) and does not yet support pre-commit hook integration. Pre-commit hook support is planned for future releases.
+**Configuration (pyproject.toml):**
+```toml
+[tool.ty]
+python_version = "3.9"
+strict = true
+```
 
-**Key settings:**
-- `strict = true` - Enforces comprehensive type checking
-- `python_version = "3.9"` - Target Python version
+**Note**: ty is pre-alpha but actively developed by Astral. While there's no official pre-commit hook repository yet, we use a local hook definition in `.pre-commit-config.yaml` for seamless integration.
 
 ### 3. Pre-commit Hooks
 Standard hooks for code hygiene:
@@ -144,7 +148,10 @@ prek install-hooks
 ### ty reports type errors
 These are genuine type errors that need to be fixed:
 ```bash
-# Run type checker (since ty doesn't integrate with pre-commit yet)
+# View errors from local hook run
+prek run ty
+
+# Or run directly
 ty check
 
 # Fix by adding type annotations
@@ -176,25 +183,52 @@ First time hook installation downloads dependencies. This may take a minute. Sub
 - **ty**: https://docs.astral.sh/ty/
 - **pre-commit hooks**: https://pre-commit.com/
 
+## GitHub Actions Integration
+
+All tools are integrated into GitHub workflows:
+
+### Workflow Steps
+1. **Setup**: Install uv, Python, and dependencies
+2. **Code Quality**: Run prek hooks (ruff + standard checks)
+3. **Type Checking**: Run ty type checker
+4. **Testing**: Run pytest with coverage
+5. **Reporting**: Upload coverage to Codecov
+
+The workflow runs on:
+- **Triggers**: Push to master/develop and pull requests
+- **Python versions**: 3.9, 3.10, 3.11, 3.12
+- **Platform**: Ubuntu latest
+
+### Workflow Failure Handling
+- If prek hooks fail (ruff, code quality), the workflow fails
+- If ty fails (type errors), the workflow fails
+- Tests use fallback to full suite if testmon optimization fails
+- Coverage upload is non-blocking
+
 ## Using ty (Pre-alpha)
 
 We use `ty` (Astral's Rust-based type checker) from the start, even in its pre-alpha stage (v0.0.1-alpha.25):
 
 **Benefits:**
-- Significantly faster than mypy (Rust implementation)
+- Significantly faster than mypy (0.5s vs 18s+)
 - Consistent with the Astral ecosystem (ruff, uv, etc.)
 - Automatically detects and uses virtual environments
 - Simple, focused type checking
+- Fully integrated with prek for automatic checking on commits
 
-**Known limitations:**
-- Pre-alpha: New features and bug fixes ongoing
-- Not all mypy features implemented yet
-- Configuration is simpler but less extensive
+**Local Integration:**
+```bash
+# Automatically on commit (via prek)
+git commit
+
+# Or manually run
+prek run ty
+ty check
+```
 
 **Installation:**
 ```bash
 uv tool install ty
-ty check                    # Run type checker manually
 ```
 
-As ty matures, it will become the standard type checker across the Python ecosystem.
+As ty matures toward feature-completeness and stable release (planned late 2025), it will become the standard type checker across the Python ecosystem.
