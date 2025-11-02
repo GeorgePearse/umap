@@ -112,7 +112,15 @@ Recommended packages:
 
 **Install Options**
 
-The recommended way to install UMAP is via PyPI using pip:
+The recommended way to install UMAP is via PyPI using uv, which provides faster and more reliable dependency resolution:
+
+.. code:: bash
+
+    uv pip install umap-learn
+
+If you don't have uv installed, you can install it from `https://docs.astral.sh/uv/getting-started/installation/ <https://docs.astral.sh/uv/getting-started/installation/>`_.
+
+Alternatively, you can install UMAP using pip:
 
 .. code:: bash
 
@@ -121,6 +129,12 @@ The recommended way to install UMAP is via PyPI using pip:
 This will install UMAP and all required dependencies.
 
 If you wish to use the plotting functionality you can use
+
+.. code:: bash
+
+    uv pip install umap-learn[plot]
+
+or with pip:
 
 .. code:: bash
 
@@ -134,12 +148,24 @@ installed either using the instructions at https://www.tensorflow.org/install
 
 .. code:: bash
 
+    uv pip install umap-learn[parametric_umap]
+
+or with pip:
+
+.. code:: bash
+
     pip install umap-learn[parametric_umap]
 
 for a CPU-only version of Tensorflow.
 
 If you're on an x86 processor, you can also optionally install `tbb`, which will
 provide additional CPU optimizations:
+
+.. code:: bash
+
+    uv pip install umap-learn[tbb]
+
+or with pip:
 
 .. code:: bash
 
@@ -152,7 +178,15 @@ For a manual development install, clone the repository and install in editable m
     git clone https://github.com/lmcinnes/umap.git
     cd umap
 
-Then create a virtual environment (recommended) and install the package:
+Then create a virtual environment (recommended) and install the package using uv:
+
+.. code:: bash
+
+    uv venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    uv pip install -e .
+
+Or if you prefer to use pip:
 
 .. code:: bash
 
