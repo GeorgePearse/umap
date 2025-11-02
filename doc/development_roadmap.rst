@@ -119,6 +119,7 @@ Major Initiatives
 
 - **ANN-Benchmarks**: Comprehensive benchmark suite for nearest neighbor algorithms
   - See benchmarks: https://ann-benchmarks.com/index.html
+  - See source & README: https://github.com/erikbern/ann-benchmarks/?tab=readme-ov-file
   - Real-world datasets and performance comparisons
   - Tracks speed vs recall tradeoffs across all major algorithms
   - Essential resource for validating implementation choices
