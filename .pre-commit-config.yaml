@@ -9,13 +9,11 @@ repos:
       - id: ruff-format
         types_or: [python, pyi]
 
-  # Type checker: mypy (used until ty is stable)
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
+  # Type checker: ty (Astral's Rust-based type checker)
+  - repo: https://github.com/astral-sh/ty
+    rev: "0.0.1-alpha.25"
     hooks:
-      - id: mypy
-        types: [python]
-        args: [--strict, --ignore-missing-imports]
+      - id: ty
 
   # Standard pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks

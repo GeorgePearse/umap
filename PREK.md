@@ -72,15 +72,17 @@ prek run mypy
 - Test files: Additional docstring rules + `S101` (assert usage)
 - setup.py: Missing module docstring
 
-### 2. MyPy (Type Checker)
+### 2. ty (Type Checker)
+- **Rust-based type checker** by Astral - significantly faster than Python-based alternatives
 - **Strict mode enabled** - enforces type annotations
-- **Configuration**: See `pyproject.toml` under `[tool.mypy]`
-- **Type stubs**: Missing imports are ignored for third-party libraries
+- **Configuration**: See `pyproject.toml` under `[tool.ty]`
+- **Automatic detection** - Automatically detects virtual environments and reads config
 
 **Key settings:**
-- `disallow_untyped_defs: true` - All functions must be typed
-- `disallow_incomplete_defs: true` - All function signatures must be complete
-- `strict_equality: true` - Strict type checking in comparisons
+- `strict = true` - Enforces comprehensive type checking
+- `python_version = "3.9"` - Target Python version
+
+**Note**: ty is pre-alpha (v0.0.1-alpha.25) but actively developed by Astral alongside ruff
 
 ### 3. Pre-commit Hooks
 Standard hooks for code hygiene:
@@ -129,14 +131,14 @@ prek cache clean
 prek install-hooks
 ```
 
-### MyPy fails with type errors
+### ty fails with type errors
 These are genuine type errors that need to be fixed:
 ```bash
 # Check which files have issues
-prek run mypy
+prek run ty
 
 # Fix by adding type annotations
-# See mypy output for specific locations
+# See ty output for specific locations
 ```
 
 ### Ruff reports too many issues
@@ -161,18 +163,28 @@ First time hook installation downloads dependencies. This may take a minute. Sub
 
 - **prek**: https://prek.j178.dev/
 - **ruff**: https://docs.astral.sh/ruff/
-- **mypy**: https://mypy.readthedocs.io/
+- **ty**: https://docs.astral.sh/ty/
 - **pre-commit hooks**: https://pre-commit.com/
 
-## Future: Transition to ty
+## Using ty (Pre-alpha)
 
-Once `ty` (Astral's type checker) reaches stability, we may replace mypy for even faster type checking:
+We use `ty` (Astral's Rust-based type checker) from the start, even in its pre-alpha stage (v0.0.1-alpha.25):
+
+**Benefits:**
+- Significantly faster than mypy (Rust implementation)
+- Consistent with the Astral ecosystem (ruff, uv, etc.)
+- Automatically detects and uses virtual environments
+- Simple, focused type checking
+
+**Known limitations:**
+- Pre-alpha: New features and bug fixes ongoing
+- Not all mypy features implemented yet
+- Configuration is simpler but less extensive
+
+**Installation:**
 ```bash
-# Example future configuration
-- repo: https://github.com/astral-sh/ty
-  rev: "0.1.0"  # When stable
-  hooks:
-    - id: ty
+uv tool install ty
+ty check                    # Run type checker manually
 ```
 
-Currently ty is in pre-alpha (v0.0.0a6), so mypy is used instead.
+As ty matures, it will become the standard type checker across the Python ecosystem.
