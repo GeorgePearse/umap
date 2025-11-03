@@ -74,25 +74,14 @@ target-version = "py39"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = [
-    # Docstring conventions - too strict for scientific code
-    "D100",  # Missing module docstring
-    "D104",  # Missing package docstring
-    "D105",  # Missing docstring in magic method
-    # Line length - handled by formatter
-    "E501",  # Line too long
-    # Type checking - handled by mypy
-    "ANN",   # Type annotations (handled by type checker)
-    # Exception handling
-    "BLE001",  # Blind except
-]
+ignore = ["FBT001", "FBT002", "FBT003"]  # Boolean arguments are OK in scientific code
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "umap/tests/*" = [
     "D100",    # Missing module docstring
     "D101",    # Missing class docstring
@@ -100,9 +89,6 @@ line-ending = "lf"
 ]
 "setup.py" = ["D100"]
 
-[tool.ty]
-python_version = "3.9"
-strict = true
 
 [tool.pytest.ini_options]
 testmon_db = ".testmon.db"
