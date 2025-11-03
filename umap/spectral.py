@@ -1,4 +1,13 @@
+"""Spectral embedding initialization for UMAP.
+
+This module provides functions for computing spectral embeddings of graphs,
+which can be used as initialization for UMAP's dimensionality reduction.
+"""
+
+from __future__ import annotations
+
 import warnings
+from typing import Any
 from warnings import warn
 
 import numpy as np
@@ -14,45 +23,43 @@ from umap.sparse import SPARSE_SPECIAL_METRICS, sparse_named_distances
 
 
 def component_layout(
-    data,
-    n_components,
-    component_labels,
-    dim,
-    random_state,
-    metric="euclidean",
-    metric_kwds=None,
-):
-    """Provide a layout relating the separate connected components. This is done
-    by taking the centroid of each component and then performing a spectral embedding
-    of the centroids.
+    data: np.ndarray | None,
+    n_components: int,
+    component_labels: np.ndarray,
+    dim: int,
+    random_state: np.random.RandomState | np.random.Generator,
+    metric: str | Any = "euclidean",
+    metric_kwds: dict[str, Any] | None = None,
+) -> np.ndarray:
+    """Provide a layout relating the separate connected components.
+
+    This is done by taking the centroid of each component and then performing
+    a spectral embedding of the centroids.
 
     Parameters
     ----------
-    data: array of shape (n_samples, n_features)
+    data : np.ndarray | None
         The source data -- required so we can generate centroids for each
         connected component of the graph.
-
-    n_components: int
+    n_components : int
         The number of distinct components to be layed out.
-
-    component_labels: array of shape (n_samples)
+    component_labels : np.ndarray
         For each vertex in the graph the label of the component to
         which the vertex belongs.
-
-    dim: int
+    dim : int
         The chosen embedding dimension.
-
-    metric: string or callable (optional, default 'euclidean')
+    random_state : np.random.RandomState | np.random.Generator
+        Random state for reproducibility.
+    metric : str | callable, default="euclidean"
         The metric used to measure distances among the source data points.
-
-    metric_kwds: dict (optional, default {})
+    metric_kwds : dict[str, Any] | None, default=None
         Keyword arguments to be passed to the metric function.
         If metric is 'precomputed', 'linkage' keyword can be used to specify
-        'average', 'complete', or 'single' linkage. Default is 'average'
+        'average', 'complete', or 'single' linkage. Default is 'average'.
 
     Returns
     -------
-    component_embedding: array of shape (n_components, dim)
+    np.ndarray
         The ``dim``-dimensional embedding of the ``n_components``-many
         connected components.
 
@@ -156,18 +163,18 @@ def component_layout(
 
 
 def multi_component_layout(
-    data,
-    graph,
-    n_components,
-    component_labels,
-    dim,
-    random_state,
-    metric="euclidean",
-    metric_kwds=None,
-    init="random",
-    tol=0.0,
-    maxiter=0,
-):
+    data: np.ndarray | None,
+    graph: scipy.sparse.spmatrix,
+    n_components: int,
+    component_labels: np.ndarray,
+    dim: int,
+    random_state: np.random.RandomState | np.random.Generator,
+    metric: str | Any = "euclidean",
+    metric_kwds: dict[str, Any] | None = None,
+    init: str = "random",
+    tol: float = 0.0,
+    maxiter: int = 0,
+) -> np.ndarray:
     """Specialised layout algorithm for dealing with graphs with many connected components.
     This will first find relative positions for the components by spectrally embedding
     their centroids, then spectrally embed each individual connected component positioning
@@ -276,15 +283,15 @@ def multi_component_layout(
 
 
 def spectral_layout(
-    data,
-    graph,
-    dim,
-    random_state,
-    metric="euclidean",
-    metric_kwds=None,
-    tol=0.0,
-    maxiter=0,
-):
+    data: np.ndarray | None,
+    graph: scipy.sparse.spmatrix,
+    dim: int,
+    random_state: np.random.RandomState | np.random.Generator,
+    metric: str | Any = "euclidean",
+    metric_kwds: dict[str, Any] | None = None,
+    tol: float = 0.0,
+    maxiter: int = 0,
+) -> np.ndarray:
     """Given a graph compute the spectral embedding of the graph. This is
     simply the eigenvectors of the laplacian of the graph. Here we use the
     normalized laplacian.
@@ -332,16 +339,16 @@ def spectral_layout(
 
 
 def tswspectral_layout(
-    data,
-    graph,
-    dim,
-    random_state,
-    metric="euclidean",
-    metric_kwds=None,
-    method=None,
-    tol=0.0,
-    maxiter=0,
-):
+    data: np.ndarray | None,
+    graph: scipy.sparse.spmatrix,
+    dim: int,
+    random_state: np.random.RandomState | np.random.Generator,
+    metric: str | Any = "euclidean",
+    metric_kwds: dict[str, Any] | None = None,
+    method: str | None = None,
+    tol: float = 0.0,
+    maxiter: int = 0,
+) -> np.ndarray:
     """Given a graph, compute the spectral embedding of the graph. This is
     simply the eigenvectors of the Laplacian of the graph. Here we use the
     normalized laplacian and a truncated SVD-based guess of the
@@ -413,17 +420,17 @@ def tswspectral_layout(
 
 
 def _spectral_layout(
-    data,
-    graph,
-    dim,
-    random_state,
-    metric="euclidean",
-    metric_kwds=None,
-    init="random",
-    method=None,
-    tol=0.0,
-    maxiter=0,
-):
+    data: np.ndarray | None,
+    graph: scipy.sparse.spmatrix,
+    dim: int,
+    random_state: np.random.RandomState | np.random.Generator,
+    metric: str | Any = "euclidean",
+    metric_kwds: dict[str, Any] | None = None,
+    init: str = "random",
+    method: str | None = None,
+    tol: float = 0.0,
+    maxiter: int = 0,
+) -> np.ndarray:
     """General implementation of the spectral embedding of the graph, derived as
     a subset of the eigenvectors of the normalized Laplacian of the graph. The numerical
     method for computing the eigendecomposition is chosen through heuristics.
@@ -499,15 +506,17 @@ def _spectral_layout(
         )
 
     sqrt_deg = np.sqrt(np.asarray(graph.sum(axis=0)).squeeze())
-    # standard Laplacian
-    # D = scipy.sparse.spdiags(diag_data, 0, graph.shape[0], graph.shape[0])
-    # L = D - graph
     # Normalized Laplacian
-    I = scipy.sparse.identity(graph.shape[0], dtype=np.float64)
-    D = scipy.sparse.spdiags(1.0 / sqrt_deg, 0, graph.shape[0], graph.shape[0])
-    L = I - D * graph * D
-    if not scipy.sparse.issparse(L):
-        L = np.asarray(L)
+    identity_matrix = scipy.sparse.identity(graph.shape[0], dtype=np.float64)
+    degree_matrix = scipy.sparse.spdiags(
+        1.0 / sqrt_deg,
+        0,
+        graph.shape[0],
+        graph.shape[0],
+    )
+    laplacian = identity_matrix - degree_matrix * graph * degree_matrix
+    if not scipy.sparse.issparse(laplacian):
+        laplacian = np.asarray(laplacian)
 
     k = dim + 1
     num_lanczos_vectors = max(2 * k + 1, int(np.sqrt(graph.shape[0])))
@@ -517,17 +526,16 @@ def _spectral_layout(
         else np.random.default_rng(seed=random_state)
     )
     if not method:
-        method = "eigsh" if L.shape[0] < 2000000 else "lobpcg"
+        method = "eigsh" if laplacian.shape[0] < 2_000_000 else "lobpcg"
 
     try:
         if init == "random":
-            X = gen.normal(size=(L.shape[0], k))
+            initial_guess = gen.normal(size=(laplacian.shape[0], k))
         elif init == "tsvd":
-            X = TruncatedSVD(
+            initial_guess = TruncatedSVD(
                 n_components=k,
                 random_state=random_state,
-                # algorithm="arpack"
-            ).fit_transform(L)
+            ).fit_transform(laplacian)
         else:
             msg = (
                 "The init parameter must be either 'random' or 'tsvd': "
@@ -539,17 +547,18 @@ def _spectral_layout(
         # For such a normalized Laplacian, the first eigenvector is always
         # proportional to sqrt(degrees). We thus replace the first t-SVD guess
         # with the exact value.
-        X[:, 0] = sqrt_deg / np.linalg.norm(sqrt_deg)
+        initial_guess[:, 0] = sqrt_deg / np.linalg.norm(sqrt_deg)
 
+        max_iterations = 5
         if method == "eigsh":
             eigenvalues, eigenvectors = scipy.sparse.linalg.eigsh(
-                L,
+                laplacian,
                 k,
                 which="SM",
                 ncv=num_lanczos_vectors,
                 tol=tol or 1e-4,
-                v0=np.ones(L.shape[0]),
-                maxiter=maxiter or graph.shape[0] * 5,
+                v0=np.ones(laplacian.shape[0]),
+                maxiter=maxiter or graph.shape[0] * max_iterations,
             )
         elif method == "lobpcg":
             with warnings.catch_warnings():
@@ -559,11 +568,11 @@ def _spectral_layout(
                     action="error",
                 )
                 eigenvalues, eigenvectors = scipy.sparse.linalg.lobpcg(
-                    L,
-                    np.asarray(X),
+                    laplacian,
+                    np.asarray(initial_guess),
                     largest=False,
                     tol=tol or 1e-4,
-                    maxiter=maxiter or 5 * graph.shape[0],
+                    maxiter=maxiter or max_iterations * graph.shape[0],
                 )
         else:
             msg = "Method should either be None, 'eigsh' or 'lobpcg'"

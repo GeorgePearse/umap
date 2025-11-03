@@ -1,5 +1,8 @@
+from typing import Any, Dict, List, Tuple, Union
+
 import numba
 import numpy as np
+import scipy.sparse
 from sklearn.base import BaseEstimator
 from sklearn.utils import check_array
 
@@ -14,7 +17,7 @@ INT32_MAX = np.iinfo(np.int32).max - 1
 
 
 @numba.njit(parallel=True)
-def in1d(arr, test_set):
+def in1d(arr: np.ndarray, test_set: np.ndarray) -> np.ndarray:
     """Check whether elements of arr are in test_set.
 
     Parameters
@@ -41,7 +44,7 @@ def in1d(arr, test_set):
     return result
 
 
-def invert_dict(d):
+def invert_dict(d: Dict[Any, Any]) -> Dict[Any, Any]:
     """Invert a dictionary by swapping keys and values.
 
     Parameters
@@ -59,7 +62,11 @@ def invert_dict(d):
 
 
 @numba.njit()
-def procrustes_align(embedding_base, embedding_to_align, anchors):
+def procrustes_align(
+    embedding_base: np.ndarray,
+    embedding_to_align: np.ndarray,
+    anchors: np.ndarray,
+) -> np.ndarray:
     """Align embedding_to_align to embedding_base using Procrustes analysis.
 
     Parameters
@@ -85,7 +92,10 @@ def procrustes_align(embedding_base, embedding_to_align, anchors):
     return embedding_to_align @ R
 
 
-def expand_relations(relation_dicts, window_size=3):
+def expand_relations(
+    relation_dicts: List[Dict[int, int]],
+    window_size: int = 3,
+) -> np.ndarray:
     """Expand relation dictionaries to include nearby timepoints within a window.
 
     Parameters
@@ -143,7 +153,11 @@ def expand_relations(relation_dicts, window_size=3):
 
 
 @numba.njit()
-def build_neighborhood_similarities(graphs_indptr, graphs_indices, relations):
+def build_neighborhood_similarities(
+    graphs_indptr: numba.typed.List,
+    graphs_indices: numba.typed.List,
+    relations: np.ndarray,
+) -> np.ndarray:
     """Build similarity weights based on neighborhood overlap across timepoints.
 
     Parameters
@@ -206,7 +220,7 @@ def build_neighborhood_similarities(graphs_indptr, graphs_indices, relations):
     return result
 
 
-def get_nth_item_or_val(iterable_or_val, n):
+def get_nth_item_or_val(iterable_or_val: Any, n: int) -> Any:
     """Get the nth item from an iterable or return the value if not iterable.
 
     Parameters
@@ -261,7 +275,12 @@ PARAM_NAMES = (
 )
 
 
-def set_aligned_params(new_params, existing_params, n_models, param_names=PARAM_NAMES):
+def set_aligned_params(
+    new_params: Dict[str, Any],
+    existing_params: Dict[str, Any],
+    n_models: int,
+    param_names: Tuple[str, ...] = PARAM_NAMES,
+) -> Dict[str, Any]:
     """Update existing parameters with new parameters for aligned UMAP.
 
     Parameters
@@ -302,12 +321,12 @@ def set_aligned_params(new_params, existing_params, n_models, param_names=PARAM_
 
 @numba.njit()
 def init_from_existing_internal(
-    previous_embedding,
-    weights_indptr,
-    weights_indices,
-    weights_data,
-    relation_dict,
-):
+    previous_embedding: np.ndarray,
+    weights_indptr: np.ndarray,
+    weights_indices: np.ndarray,
+    weights_data: np.ndarray,
+    relation_dict: numba.typed.Dict,
+) -> np.ndarray:
     """Initialize new embedding from existing embedding using weighted neighbors.
 
     Parameters
@@ -358,7 +377,11 @@ def init_from_existing_internal(
     return result
 
 
-def init_from_existing(previous_embedding, graph, relations):
+def init_from_existing(
+    previous_embedding: np.ndarray,
+    graph: scipy.sparse.spmatrix,
+    relations: Dict[int, int],
+) -> np.ndarray:
     """Initialize new embedding from existing embedding.
 
     Parameters
@@ -461,36 +484,36 @@ class AlignedUMAP(BaseEstimator):
 
     def __init__(
         self,
-        n_neighbors=15,
-        n_components=2,
-        metric="euclidean",
-        metric_kwds=None,
-        n_epochs=None,
-        learning_rate=1.0,
-        init="spectral",
-        alignment_regularisation=1.0e-2,
-        alignment_window_size=3,
-        min_dist=0.1,
-        spread=1.0,
-        low_memory=False,
-        set_op_mix_ratio=1.0,
-        local_connectivity=1.0,
-        repulsion_strength=1.0,
-        negative_sample_rate=5,
-        transform_queue_size=4.0,
-        a=None,
-        b=None,
-        random_state=None,
-        angular_rp_forest=False,
-        target_n_neighbors=-1,
-        target_metric="categorical",
-        target_metric_kwds=None,
-        target_weight=0.5,
-        transform_seed=42,
-        force_approximation_algorithm=False,
-        verbose=False,
-        unique=False,
-    ):
+        n_neighbors: Union[int, List[int], Tuple[int, ...]] = 15,
+        n_components: int = 2,
+        metric: Union[str, Any, List[Any], Tuple[Any, ...]] = "euclidean",
+        metric_kwds: Union[Dict[str, Any], List[Dict[str, Any]], None] = None,
+        n_epochs: Union[int, List[int], Tuple[int, ...], None] = None,
+        learning_rate: Union[float, List[float], Tuple[float, ...]] = 1.0,
+        init: str = "spectral",
+        alignment_regularisation: float = 1.0e-2,
+        alignment_window_size: int = 3,
+        min_dist: Union[float, List[float], Tuple[float, ...]] = 0.1,
+        spread: Union[float, List[float], Tuple[float, ...]] = 1.0,
+        low_memory: bool = False,
+        set_op_mix_ratio: Union[float, List[float], Tuple[float, ...]] = 1.0,
+        local_connectivity: Union[float, List[float], Tuple[float, ...]] = 1.0,
+        repulsion_strength: Union[float, List[float], Tuple[float, ...]] = 1.0,
+        negative_sample_rate: Union[int, List[int], Tuple[int, ...]] = 5,
+        transform_queue_size: float = 4.0,
+        a: Union[float, None] = None,
+        b: Union[float, None] = None,
+        random_state: Union[int, np.random.RandomState, None] = None,
+        angular_rp_forest: Union[bool, List[bool], Tuple[bool, ...]] = False,
+        target_n_neighbors: int = -1,
+        target_metric: str = "categorical",
+        target_metric_kwds: Union[Dict[str, Any], None] = None,
+        target_weight: float = 0.5,
+        transform_seed: int = 42,
+        force_approximation_algorithm: bool = False,
+        verbose: bool = False,
+        unique: Union[bool, List[bool], Tuple[bool, ...]] = False,
+    ) -> None:
         self.n_neighbors = n_neighbors
         self.metric = metric
         self.metric_kwds = metric_kwds
@@ -524,7 +547,12 @@ class AlignedUMAP(BaseEstimator):
         self.a = a
         self.b = b
 
-    def fit(self, X, y=None, **fit_params):
+    def fit(
+        self,
+        X: Union[List[np.ndarray], Tuple[np.ndarray, ...], np.ndarray],
+        y: Union[List[np.ndarray], Tuple[np.ndarray, ...], np.ndarray, None] = None,
+        **fit_params: Any,
+    ) -> "AlignedUMAP":
         """Fit aligned UMAP on multiple related datasets.
 
         Parameters
@@ -702,7 +730,12 @@ class AlignedUMAP(BaseEstimator):
 
         return self
 
-    def fit_transform(self, X, y=None, **fit_params):
+    def fit_transform(
+        self,
+        X: Union[List[np.ndarray], Tuple[np.ndarray, ...], np.ndarray],
+        y: Union[List[np.ndarray], Tuple[np.ndarray, ...], np.ndarray, None] = None,
+        **fit_params: Any,
+    ) -> List[np.ndarray]:
         """Fit aligned UMAP and return the embeddings.
 
         Parameters
@@ -724,7 +757,12 @@ class AlignedUMAP(BaseEstimator):
         self.fit(X, y, **fit_params)
         return self.embeddings_
 
-    def update(self, X, y=None, **fit_params):
+    def update(
+        self,
+        X: np.ndarray,
+        y: Union[np.ndarray, None] = None,
+        **fit_params: Any,
+    ) -> None:
         """Add a new dataset to an existing aligned UMAP embedding.
 
         Parameters
