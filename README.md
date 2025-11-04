@@ -43,6 +43,8 @@ Narayan, A, Berger, B, Cho, H, *Assessing Single-Cell Transcriptomic Variability
 
 UMAP depends upon `scikit-learn`, and thus `scikit-learn`'s dependencies such as `numpy` and `scipy`. UMAP adds a requirement for `numba` for performance reasons. The original version used Cython, but the improved code clarity, simplicity and performance of Numba made the transition necessary.
 
+**New in this version:** This fork includes an optimized Rust-based HNSW nearest neighbor backend (`hnsw-rs`) that provides significant performance improvements over the default implementations, especially for large datasets.
+
 **Requirements:**
 
 * Python 3.6 or greater
@@ -59,8 +61,11 @@ UMAP depends upon `scikit-learn`, and thus `scikit-learn`'s dependencies such as
   * matplotlib
   * datashader
   * holoviews
-* for Parametric UMAP
-  * tensorflow > 2.0.0
+* For Parametric UMAP (PyTorch-based)
+  * torch >= 1.9.0
+  * torchvision (for image utilities)
+* For optimized nearest neighbor search
+  * hnsw-rs (Rust-based HNSW backend)
 
 ### Install Options
 
@@ -94,7 +99,7 @@ pip install umap[plot]
 
 to install all the plotting dependencies.
 
-If you wish to use Parametric UMAP, you need to install Tensorflow, which can be installed either using the instructions at https://www.tensorflow.org/install (recommended) or using
+If you wish to use Parametric UMAP, you need to install PyTorch, which can be installed using the instructions at https://pytorch.org/get-started/locally (choose your platform and preferences), or use:
 
 ```bash
 uv pip install umap[parametric_umap]
@@ -106,7 +111,7 @@ or with pip:
 pip install umap[parametric_umap]
 ```
 
-for a CPU-only version of Tensorflow.
+This will install PyTorch with CPU support. For GPU support, follow the [official PyTorch installation guide](https://pytorch.org/get-started/locally) to install the appropriate CUDA version.
 
 If you're on an x86 processor, you can also optionally install `tbb`, which will provide additional CPU optimizations:
 
@@ -221,7 +226,12 @@ Finally, UMAP has solid theoretical foundations in manifold learning (see [our p
 
 ## Performance and Examples
 
-UMAP is very efficient at embedding large high dimensional datasets. In particular it scales well with both input dimension and embedding dimension. For the best possible performance we recommend installing the nearest neighbor computation library [pynndescent](https://github.com/lmcinnes/pynndescent). UMAP will work without it, but if installed it will run faster, particularly on multicore machines.
+UMAP is very efficient at embedding large high dimensional datasets. In particular it scales well with both input dimension and embedding dimension. For the best possible performance we recommend:
+
+1. Installing the Rust-based HNSW backend ([hnsw-rs](https://github.com/lmcinnes/hnsw-rs)) for optimized nearest neighbor search
+2. Installing the nearest neighbor computation library [pynndescent](https://github.com/lmcinnes/pynndescent) as a fallback
+
+UMAP will work without these packages, but with them installed it will run significantly faster, particularly on multicore machines and large datasets.
 
 For a problem such as the 784-dimensional MNIST digits dataset with 70000 data samples, UMAP can complete the embedding in under a minute (as compared with around 45 minutes for scikit-learn's t-SNE implementation). Despite this runtime efficiency, UMAP still produces high quality embeddings.
 
@@ -260,7 +270,7 @@ The plotting package offers basic plots, as well as interactive plots with hover
 
 ## Parametric UMAP
 
-Parametric UMAP provides support for training a neural network to learn a UMAP based transformation of data. This can be used to support faster inference of new unseen data, more robust inverse transforms, autoencoder versions of UMAP and semi-supervised classification (particularly for data well separated by UMAP and very limited amounts of labelled data). See the [documentation of Parametric UMAP](https://umap.readthedocs.io/en/0.5dev/parametric_umap.html) or the [example notebooks](https://github.com/lmcinnes/umap/tree/master/notebooks/Parametric_UMAP) for more.
+Parametric UMAP provides support for training a neural network to learn a UMAP based transformation of data using PyTorch. This can be used to support faster inference of new unseen data, more robust inverse transforms, autoencoder versions of UMAP and semi-supervised classification (particularly for data well separated by UMAP and very limited amounts of labelled data). The PyTorch-based implementation provides better performance and flexibility compared to TensorFlow. See the [documentation of Parametric UMAP](https://umap.readthedocs.io/en/0.5dev/parametric_umap.html) or the [example notebooks](https://github.com/lmcinnes/umap/tree/master/notebooks/Parametric_UMAP) for more.
 
 ## densMAP
 
