@@ -3,7 +3,7 @@ requires = ["maturin>=1.4,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "umap-learn"
+name = "umap"
 version = "0.5.9.post2"
 description = "Uniform Manifold Approximation and Projection"
 readme = "README.rst"

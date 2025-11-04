@@ -30,10 +30,10 @@ parallelization and speed up the calculations.
     import umap
     import umap.plot
     from umap.umap_ import nearest_neighbors
-    
+
     data, labels = fetch_openml('mnist_784', version=1, return_X_y=True)
     labels = np.asarray(labels, dtype=np.int32)
-    
+
     n_neighbors = [5, 50, 100, 250]
     min_dists = [0, 0.2, 0.5, 0.9]
     normal_embeddings = np.zeros((4, 4, 70000, 2))
@@ -55,13 +55,13 @@ parallelization and speed up the calculations.
 
     **Time taken to compute UMAP on grid of parameters:**
     Wall time: 31min 57s
-    
+
 
 .. code:: python3
 
     %%time
     # UMAP run on list of n_neighbors without precomputed_knn
-    
+
     # We compute the knn for max(n_neighbors)=250
     mnist_knn = nearest_neighbors(data,
                                   n_neighbors=250,
@@ -84,7 +84,7 @@ parallelization and speed up the calculations.
 
     **Time taken to compute UMAP on grid of parameters with precomputed_knn:**
     Wall time: 17min 54s
-    
+
 
 Using a precomputed_knn we have cut the computation time in half!
 Observe that half of our n_neighbors values are relatively small. If
@@ -99,9 +99,9 @@ our embedding.
 .. code:: python3
 
     import matplotlib.pyplot as plt
-    
+
     fig, axs = plt.subplots(4, 4, figsize=(20, 20))
-    
+
     for i, ax_row in enumerate(axs):
         for j, ax in enumerate(ax_row):
             ax.scatter(precomputed_knn_embeddings[i, j, :, 0],
@@ -133,7 +133,7 @@ Reproducibility
 ----------------
 
 We strongly recommend that you review the UMAP `reproducibility
-section <https://umap-learn.readthedocs.io/en/latest/reproducibility.html>`__
+section <https://umap.readthedocs.io/en/latest/reproducibility.html>`__
 in the docs before attempting to reproduce results with
 *precomputed_knn*.
 
@@ -212,26 +212,26 @@ random seed.
 
     import umap.plot
     random_seed = 10
-    
+
     knn = nearest_neighbors(
-                            X, 
+                            X,
                             n_neighbors=50,
                             metric='euclidean',
                             metric_kwds=None,
                             angular=False,
                             random_state=random_seed,
                             )
-    
+
     knn_umap = umap.UMAP(n_neighbors=30, precomputed_knn=knn, random_state=random_seed).fit(X)
     knn_umap2 = umap.UMAP(n_neighbors=30, precomputed_knn=knn, random_state=random_seed).fit(X)
-    
+
     fig, ax = plt.subplots(1, 2, figsize=(13,7))
     umap.plot.points(knn_umap, labels=synthetic_labels, ax=ax[0], theme='green')
     umap.plot.points(knn_umap2, labels=synthetic_labels, ax=ax[1], theme='green')
     ax[0].set_title("Precomuted knn 1st run", size=16)
     ax[1].set_title("Precomuted knn 2nd run", size=16)
     plt.show()
-    
+
     print("\033[1m"+"Are the embeddings for knn_umap and knn_umap2 the same?\033[0m")
     print((knn_umap.embedding_ == knn_umap2.embedding_).all())
 
@@ -244,7 +244,7 @@ random seed.
 
     **Are the embeddings for knn_umap and knn_umap2 the same?**
     True
-    
+
 
 As we can see, by fixing the *random_seed* and the *n_neighbors* for the
 knn, we have been able to obtain identical results from both UMAP runs.
@@ -253,10 +253,10 @@ In contrast, if these differ, we can’t guarantee the same result.
 .. code:: python3
 
     random_seed2 = 15
-    
+
     # Different n_neighbors
     knn3 = nearest_neighbors(
-                            X, 
+                            X,
                             n_neighbors=40,
                             metric='euclidean',
                             metric_kwds=None,
@@ -265,27 +265,27 @@ In contrast, if these differ, we can’t guarantee the same result.
                             )
     # Different random seed
     knn4 = nearest_neighbors(
-                            X, 
+                            X,
                             n_neighbors=50,
                             metric='euclidean',
                             metric_kwds=None,
                             angular=False,
                             random_state=random_seed2,
                             )
-    
+
     knn_umap3 = umap.UMAP(n_neighbors=30, precomputed_knn=knn3, random_state=random_seed).fit(X)
     knn_umap4 = umap.UMAP(n_neighbors=30, precomputed_knn=knn4, random_state=random_seed2).fit(X)
-    
+
     fig, ax = plt.subplots(1, 2, figsize=(13,7))
     umap.plot.points(knn_umap3, labels=synthetic_labels, ax=ax[0], theme='green')
     umap.plot.points(knn_umap4, labels=synthetic_labels, ax=ax[1], theme='green')
     ax[0].set_title("Precomuted knn; different knn n_neighbors", size=16)
     ax[1].set_title("Precomuted knn; different random_seed", size=16)
     plt.show()
-    
+
     print("\033[1m"+"Are the embeddings for knn_umap and knn_umap3 the same?\033[0m")
     print((knn_umap.embedding_ == knn_umap3.embedding_).all())
-    
+
     print("\033[1m"+"Are the embeddings for knn_umap and knn_umap4 the same?\033[0m")
     print((knn_umap.embedding_ == knn_umap4.embedding_).all())
 
@@ -300,7 +300,7 @@ In contrast, if these differ, we can’t guarantee the same result.
     False
     **Are the embeddings for knn_umap and knn_umap4 the same?**
     False
-    
+
 
 Without those three parameters being equal between runs, we have
 obtained different results.
@@ -318,7 +318,7 @@ If you provide UMAP a *random_seed*, it converts it into an
 *np.random.RandomState* (RNG). This RNG is then used to fix the state
 for all the relevant steps in the algorithm. The important thing to
 note, is that the RNG is mutated everytime it’s used. So, if we want to
-reproduce results with precomputed_knn we’ll have to mimic how UMAP 
+reproduce results with precomputed_knn we’ll have to mimic how UMAP
 manipulates the RNG when calling the *fit()* function.
 
 For more information on random states and their behavior, please refer to
@@ -334,16 +334,16 @@ using the *nearest_neighbors()* function in the same way that
 .. code:: python3
 
     from sklearn.utils import check_random_state
-    
+
     # First we run the normal UMAP to compare with
     random_seed3 = 12
     normal_umap = umap.UMAP(n_neighbors=30, random_state=random_seed3).fit(X)
-    
+
     # Now we run precomputed_knn UMAP
     random_state3 = check_random_state(random_seed3)
     # random_state3 = numpy.random.RandomState(random_seed3)
     knn5 = nearest_neighbors(
-                            X, 
+                            X,
                             n_neighbors=30,
                             metric='euclidean',
                             metric_kwds=None,
@@ -352,8 +352,8 @@ using the *nearest_neighbors()* function in the same way that
                             )
     # This mutated RNG can now be fed into precompute_knn UMAP to obtain
     # the same results as in normal UMAP
-    knn_umap5 = umap.UMAP(n_neighbors=30, 
-                          precomputed_knn=knn5, 
+    knn_umap5 = umap.UMAP(n_neighbors=30,
+                          precomputed_knn=knn5,
                           random_state=random_state3,  # <--- This is a RNG
                          ).fit(X)
 
@@ -374,7 +374,7 @@ obtain the same results.
     ax[0].set_title("Normal UMAP", size=16)
     ax[1].set_title("Precomuted knn UMAP", size=16)
     plt.show()
-    
+
     print("\033[1m"+"Are the embeddings for normal_umap and knn_umap5 the same?\033[0m")
     print((normal_umap.embedding_ == knn_umap5.embedding_).all())
 
@@ -387,4 +387,3 @@ obtain the same results.
 
     **Are the embeddings for normal_umap and knn_umap5 the same?**
     True
-    

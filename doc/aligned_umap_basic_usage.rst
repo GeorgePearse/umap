@@ -15,7 +15,7 @@ of constraint as to how far shared points can take different locations
 in different embeddings *during* the optimization. This last option is
 possible, but is not easily tractable to implement yourself (unlike the
 first two options). To remedy this issue it has been implemented as a
-separate model class in ``umap-learn`` called ``AlignedUMAP``. The
+separate model class in ``umap`` called ``AlignedUMAP``. The
 resulting class is quite flexible, but here we will walk through simple
 usage on some basic (and somewhat contrived) data just to demonstrate
 how to get it running on data.
@@ -402,9 +402,9 @@ figure.
     interpolated_traces = [fx(z), fy(z)]
     traces = [
         go.Scatter3d(
-            x=interpolated_traces[0][i], 
-            y=interpolated_traces[1][i], 
-            z=z*3.0, 
+            x=interpolated_traces[0][i],
+            y=interpolated_traces[1][i],
+            z=z*3.0,
             mode="lines",
             line=dict(
                 color=palette[digits.target[i]],

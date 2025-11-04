@@ -2,7 +2,7 @@ Outlier detection using UMAP
 ============================
 
 While an earlier tutorial looked at using `UMAP for
-clustering <https://umap-learn.readthedocs.io/en/latest/clustering.html>`__,
+clustering <https://umap.readthedocs.io/en/latest/clustering.html>`__,
 it can also be used for outlier detection, providing that some care is
 taken. This tutorial will look at how to use UMAP in this manner, and
 what to look out for, by finding anomalous digits in the MNIST
@@ -194,7 +194,7 @@ remain disconnected, which is certainly beneficial when seeking to find
 outliers. A downside of the intersection is that it tends to break up
 the resulting simplicial set into many disconnected components and a lot
 of the more non-local and global structure is lost, resulting in a lot
-lower quality of the resulting embedding. We can, however, interpolate 
+lower quality of the resulting embedding. We can, however, interpolate
 between the union and intersection. In UMAP this is given by the
 ``set_op_mix_ratio``, where a value of 0.0 represents an intersection,
 and a value of 1.0 represents a union (the default value is 1.0). By

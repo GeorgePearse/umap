@@ -38,7 +38,7 @@ Install UMAP via pip:
 
 .. code:: bash
 
-    pip install umap-learn
+    pip install umap
 
 This will install UMAP and all required dependencies. For development installation, see the README.
 

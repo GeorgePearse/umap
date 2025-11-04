@@ -138,14 +138,14 @@ available to R users.
 If you want to use the reference
 implementation under the hood but want a nice R interface
 then we recommend `umap <https://github.com/tkonopka/umap>`_,
-which wraps the python code with 
+which wraps the python code with
 `reticulate <https://rstudio.github.io/reticulate/>`_.
-Another reticulate interface is 
+Another reticulate interface is
 `umapr <https://github.com/ropenscilabs/umapr>`_, but it
 may not be under active development.
 
 If you want a pure R version then we recommend
-`uwot <https://github.com/jlmelville/uwot>`_ at this time. 
+`uwot <https://github.com/jlmelville/uwot>`_ at this time.
 `umap <https://github.com/tkonopka/umap>`_ also provides
 a pure R implementation in addition to its reticulate
 wrapper.
@@ -172,11 +172,10 @@ cause problems are:
 - UMAP doesn't currently support 32-bit Windows.
   This is due to issues with Numba of that platform
   and will not likely be resolved soon. Sorry :-(
-- If you have pip installed the package ``umap``
-  at any time (instead of ``umap-learn``) this can
-  cause serious issues. You will want to purge/remove
+- If you have pip installed an old package with a conflicting name
+  at any time, this can cause serious issues. You will want to purge/remove
   everything umap related in your ``site-packages``
-  directory and re-install ``umap-learn``.
+  directory and re-install ``umap``.
 - Having any files called ``umap.py`` in the current
   directory you will have issues as that will be
   loaded instead of the ``umap`` module.

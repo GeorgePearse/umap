@@ -11,13 +11,13 @@
 
 |Docs|_ |joss_paper|_
 
-.. |pypi_version| image:: https://img.shields.io/pypi/v/umap-learn.svg
-.. _pypi_version: https://pypi.python.org/pypi/umap-learn/
+.. |pypi_version| image:: https://img.shields.io/pypi/v/umap.svg
+.. _pypi_version: https://pypi.python.org/pypi/umap/
 
-.. |pypi_downloads| image:: https://pepy.tech/badge/umap-learn/month
-.. _pypi_downloads: https://pepy.tech/project/umap-learn
+.. |pypi_downloads| image:: https://pepy.tech/badge/umap/month
+.. _pypi_downloads: https://pepy.tech/project/umap
 
-.. |License| image:: https://img.shields.io/pypi/l/umap-learn.svg
+.. |License| image:: https://img.shields.io/pypi/l/umap.svg
 .. _License: https://github.com/lmcinnes/umap/blob/master/LICENSE.txt
 
 .. |build_status| image:: https://dev.azure.com/TutteInstitute/build-pipelines/_apis/build/status/lmcinnes.umap?branchName=master
@@ -26,8 +26,8 @@
 .. |Coverage| image:: https://coveralls.io/repos/github/lmcinnes/umap/badge.svg
 .. _Coverage: https://coveralls.io/github/lmcinnes/umap
 
-.. |Docs| image:: https://readthedocs.org/projects/umap-learn/badge/?version=latest
-.. _Docs: https://umap-learn.readthedocs.io/en/latest/?badge=latest
+.. |Docs| image:: https://readthedocs.org/projects/umap/badge/?version=latest
+.. _Docs: https://umap.readthedocs.io/en/latest/?badge=latest
 
 .. |joss_paper| image:: http://joss.theoj.org/papers/10.21105/joss.00861/status.svg
 .. _joss_paper: https://doi.org/10.21105/joss.00861
@@ -73,7 +73,7 @@ The important thing is that you don't need to worry about that—you can use
 UMAP right now for dimension reduction and visualisation as easily as a drop
 in replacement for scikit-learn's t-SNE.
 
-Documentation is `available via Read the Docs <https://umap-learn.readthedocs.io/>`_.
+Documentation is `available via Read the Docs <https://umap.readthedocs.io/>`_.
 
 **New: this package now also provides support for densMAP.** The densMAP algorithm augments UMAP
 to preserve local density information in addition to the topological structure of the data.
@@ -116,7 +116,7 @@ The recommended way to install UMAP is via PyPI using uv, which provides faster 
 
 .. code:: bash
 
-    uv pip install umap-learn
+    uv pip install umap
 
 If you don't have uv installed, you can install it from `https://docs.astral.sh/uv/getting-started/installation/ <https://docs.astral.sh/uv/getting-started/installation/>`_.
 
@@ -124,7 +124,7 @@ Alternatively, you can install UMAP using pip:
 
 .. code:: bash
 
-    pip install umap-learn
+    pip install umap
 
 This will install UMAP and all required dependencies.
 
@@ -132,13 +132,13 @@ If you wish to use the plotting functionality you can use
 
 .. code:: bash
 
-    uv pip install umap-learn[plot]
+    uv pip install umap[plot]
 
 or with pip:
 
 .. code:: bash
 
-    pip install umap-learn[plot]
+    pip install umap[plot]
 
 to install all the plotting dependencies.
 
@@ -148,13 +148,13 @@ installed either using the instructions at https://www.tensorflow.org/install
 
 .. code:: bash
 
-    uv pip install umap-learn[parametric_umap]
+    uv pip install umap[parametric_umap]
 
 or with pip:
 
 .. code:: bash
 
-    pip install umap-learn[parametric_umap]
+    pip install umap[parametric_umap]
 
 for a CPU-only version of Tensorflow.
 
@@ -163,13 +163,13 @@ provide additional CPU optimizations:
 
 .. code:: bash
 
-    uv pip install umap-learn[tbb]
+    uv pip install umap[tbb]
 
 or with pip:
 
 .. code:: bash
 
-    pip install umap-learn[tbb]
+    pip install umap[tbb]
 
 For a manual development install, clone the repository and install in editable mode:
 
@@ -261,7 +261,7 @@ An example of making use of these options:
                           metric='correlation').fit_transform(digits.data)
 
 UMAP also supports fitting to sparse matrix data. For more details
-please see `the UMAP documentation <https://umap-learn.readthedocs.io/>`_
+please see `the UMAP documentation <https://umap.readthedocs.io/>`_
 
 ----------------
 Benefits of UMAP
@@ -280,7 +280,7 @@ technique as a preliminary step to other machine learning tasks. With a
 little care it partners well with the `hdbscan
 <https://github.com/scikit-learn-contrib/hdbscan>`_ clustering library (for
 more details please see `Using UMAP for Clustering
-<https://umap-learn.readthedocs.io/en/latest/clustering.html>`_).
+<https://umap.readthedocs.io/en/latest/clustering.html>`_).
 
 Third, UMAP often performs better at preserving some aspects of global structure
 of the data than most implementations of t-SNE. This means that it can often
@@ -391,7 +391,7 @@ transformation of data. This can be used to support faster inference of new unse
 data, more robust inverse transforms, autoencoder versions of UMAP and
 semi-supervised classification (particularly for data well separated by UMAP and very
 limited amounts of labelled data). See the
-`documentation of Parametric UMAP <https://umap-learn.readthedocs.io/en/0.5dev/parametric_umap.html>`_
+`documentation of Parametric UMAP <https://umap.readthedocs.io/en/0.5dev/parametric_umap.html>`_
 or the
 `example notebooks <https://github.com/lmcinnes/umap/tree/master/notebooks/Parametric_UMAP>`_
 for more.
@@ -440,7 +440,7 @@ An example of making use of these options (based on a subsample of the mnist_784
     embedding, r_orig, r_emb = umap.UMAP(densmap=True, dens_lambda=2.0, n_neighbors=30,
                                          output_dens=True).fit_transform(subsample)
 
-See `the documentation <https://umap-learn.readthedocs.io/en/0.5dev/densmap_demo.html>`_ for more details.
+See `the documentation <https://umap.readthedocs.io/en/0.5dev/densmap_demo.html>`_ for more details.
 
 
 ---------------------------------
@@ -517,8 +517,8 @@ For more information and advanced usage, see the `torchdr documentation <https:/
 Help and Support
 ----------------
 
-Documentation is at `Read the Docs <https://umap-learn.readthedocs.io/>`_.
-The documentation `includes a FAQ <https://umap-learn.readthedocs.io/en/latest/faq.html>`_ that
+Documentation is at `Read the Docs <https://umap.readthedocs.io/>`_.
+The documentation `includes a FAQ <https://umap.readthedocs.io/en/latest/faq.html>`_ that
 may answer your questions. If you still have questions then please
 `open an issue <https://github.com/lmcinnes/umap/issues/new>`_
 and I will try to provide any help and guidance that I can.
