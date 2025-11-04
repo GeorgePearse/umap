@@ -60,10 +60,19 @@ except ImportError:
 from importlib.metadata import PackageNotFoundError, version
 
 from .aligned_umap import AlignedUMAP
+from .composition import AdaptiveDR, DRPipeline, EnsembleDR, ProgressiveDR
 
 try:
     __version__ = version("umap")
 except PackageNotFoundError:
     __version__ = "0.5-dev"
 
-__all__ = ["UMAP", "AlignedUMAP", "ParametricUMAP"]
+__all__ = [
+    "UMAP",
+    "AdaptiveDR",
+    "AlignedUMAP",
+    "DRPipeline",
+    "EnsembleDR",
+    "ParametricUMAP",
+    "ProgressiveDR",
+]
