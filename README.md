@@ -1,3 +1,5 @@
+> **Note:** I like embeddings, people should use embeddings more
+
 # UMAP
 
 ![UMAP logo](doc/logo_large.png)
